@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ตรวจสอบมิเตอร์ไฟฟ้า</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <style>
+        body {
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        input,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        
+        .error-text {
+            color: red;
+            font-size: 14px;
+        }
+        
+        .info-text {
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>มิเตอร์ประเภท 1P 2W</h1>
+
+    <label>PEA No.</label>
+    <input type="text" id="pea_no" />
+
+    <label>ชนิดมิเตอร์</label>
+    <select id="meter_type">
+      <option value="">เลือกชนิดมิเตอร์</option>
+    </select>
+
+    <label>ประเภทการใช้งาน</label>
+    <select id="usage_type">
+      <option value="">เลือกประเภทการใช้งาน</option>
+    </select>
+
+    <label>Rev./Impulse/kWh</label>
+    <input type="number" id="rev_impulse" />
+
+    <p class="info-text">ผลการตรวจสอบมิเตอร์ไฟฟ้า (ค่ามาตรฐาน +- 2.5%)</p>
+    <p class="error-text">ค่าผิดพลาด Error: 0.00</p>
+    <p class="info-text">สรุปผลการตรวจสอบ: รอผลการทดสอบ</p>
+
+    <button onclick="calculate()">คำนวณ</button>
+</body>
+
+<script src="js/index.js"></script>
+
+</html>

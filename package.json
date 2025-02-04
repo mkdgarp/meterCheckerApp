@@ -1,0 +1,29 @@
+{
+    "name": "com.example.meterchecker",
+    "displayName": "MeterCheckerApp",
+    "version": "1.0.0",
+    "description": "A sample Apache Cordova application that responds to the deviceready event.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "cordova serve",
+        "dev": "cordova run browser --live-reload"
+    },
+    "keywords": [
+        "ecosystem:cordova"
+    ],
+    "author": "Apache Cordova Team",
+    "license": "Apache-2.0",
+    "devDependencies": {
+        "cordova-android": "^13.0.0",
+        "cordova-browser": "^7.0.0",
+        "cordova-plugin-browsersync": "^1.1.0"
+    },
+    "cordova": {
+        "platforms": [
+            "android",
+            "browser"
+        ],
+        "plugins": {}
+    }
+}
