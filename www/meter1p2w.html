@@ -69,7 +69,14 @@
     <div class="renderDOM">
 
     </div>
-    
+    <div>
+        <h1>Stopwatch</h1>
+        <div id="time">00:00:00</div>
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+        <button id="reset">Reset</button>
+    </div>
+
     <p class="info-text">ผลการตรวจสอบมิเตอร์ไฟฟ้า (ค่ามาตรฐาน +- 2.5%)</p>
     <p class="error-text">ค่าผิดพลาด Error: 0.00</p>
     <p class="info-text">สรุปผลการตรวจสอบ: รอผลการทดสอบ</p>
@@ -100,66 +107,62 @@
         console('clear!')
     }
 
-    const digitalNormal = () => {
-        let html = ''
-        html += 
-        `
-            <div>
-                <span>ป้อนค่ามิเตอร์ที่วัดได้</span>
-            </div>
-            <div><input class="form-control" type="text" value="" placeholder="CODE012/345" /></div>
-            <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
-        `
-            let renderDOM = $('.renderDOM')
-            renderDOM.html(html)
-    }
-
-    const digitalVApf = () => {
-        let html = ''
-        html += 
-        `
-            <div>
-                <span>ป้อนค่า V , I , pf จากแคลมป์มิเตอร์</span>
-            </div>
-            <div class="d-inline-flex align-items-center w-100">
-                <label class="form-label">V</label>
-                <input class="form-control ms-auto w-25" type="text" value="" placeholder="V" /></div>
-            <div class="d-inline-flex align-items-center w-100">
-                <label class="form-label">A</label>
-                <input class="form-control ms-auto w-25" type="text" value="" placeholder="A" /></div>
-            <div class="d-inline-flex align-items-center w-100">
-                <label class="form-label">pf</label>
-                <input class="form-control ms-auto w-25" type="text" value="" placeholder="pf" /></div>
-            <div class="">ค่าKWที่ใช้จริง <span class=" text-danger">0.0000</span></div>
-            <div class="mt-2">
-                <span>ป้อนค่ามิเตอร์ที่วัดได้</span>
-            </div>
-            <div><input class="form-control" type="text" value="" placeholder="CODE012/345" /></div>
-            <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
-        `
-            let renderDOM = $('.renderDOM')
-            renderDOM.html(html)
-    }
-    const digitalkWh = () => {
-        let html = ''
-        html += 
-        `
-            <div>
-                <span>ป้อนค่า kW จากแคมป์มิเตอร์</span>
-            </div>
-            <div class="d-inline-flex align-items-center w-100">
-                <label class="form-label">KW</label>
-                <input class="form-control ms-auto w-25" type="text" value="" placeholder="V" /></div>
-            
-            <div class="mt-2">
-                <span>ป้อนค่ามิเตอร์ที่วัดได้</span>
-            </div>
-            <div><input class="form-control" type="text" value="" placeholder="CODE012/345" /></div>
-            <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
-        `
-            let renderDOM = $('.renderDOM')
-            renderDOM.html(html)
-    }
+    
 </script>
+<script>
+    $(document).ready(function () {
+        $('#stop').hide()
+        let timer;
+        let milliseconds = 0;
+        let running = false;
+        let notAgain = false
 
+        function formatTime(ms) {
+            let sec = Math.floor(ms / 100);
+            let milli = ms % 100;
+            return `${String(sec).padStart(2, '0')}.${String(milli).padStart(2, '0')}`;
+        }
+
+        function updateDisplay() {
+            $('#time').text(formatTime(milliseconds));
+        }
+
+        $('#start').click(function () {
+            
+            if (!running && !notAgain) {
+                $(this).hide()
+            $('#stop').show()
+                running = true;
+                timer = setInterval(() => {
+                    milliseconds++;
+                    updateDisplay();
+                }, 10); // Runs every 10ms
+            } else {
+                alert('pls click reset to start new record')
+            }
+        });
+
+        $('#stop').click(function () {
+            $(this).hide()
+            $('#start').show()
+            running = false;
+            console.log(milliseconds/100)
+            clearInterval(timer);
+            notAgain = true
+        });
+
+        $('#reset').click(function () {
+            notAgain = false
+            $('#start').show()
+            $('#stop').hide()
+            clearInterval(timer);
+            running = false;
+            milliseconds = 0;
+            updateDisplay();
+        });
+
+        updateDisplay();
+    });
+</script>
+<script src="js/digitalMeter.js"></script>
 </html>

@@ -25,15 +25,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // DOM is fully loaded
     console.log('DOM fully loaded and parsed asdasd');
 
-    // Initialize any DOM-dependent code here
-    document.getElementById('voltage').value = '';
-    document.getElementById('current').value = '';
-    document.getElementById('pf').value = '';
+    onDeviceReady()
 });
 
 function onDeviceReady() {
     // Cordova is now initialized. Have fun!
 
-    console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
-    document.getElementById('deviceready').classList.add('ready');
+    // console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
+    // document.getElementById('deviceready').classList.add('ready');
+    console.log(navigator.device.capture);
 }
+
+

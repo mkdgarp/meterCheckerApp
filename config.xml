@@ -10,5 +10,5 @@
     <allow-intent href="https://*/*" />
     <access origin="http://*/*" />
 <access origin="https://*/*" />
-
+<preference name="AndroidPersistentFileLocation" value="Compatibility" />
 </widget>
