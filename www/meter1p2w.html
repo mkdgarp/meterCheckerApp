@@ -54,10 +54,12 @@
     <label>ชนิดมิเตอร์</label>
     <select id="meter_type">
       <option value="">เลือกชนิดมิเตอร์</option>
+      <option value="1">Analog</option>
+      <option value="2">Digital</option>
     </select>
 
     <label>ประเภทการใช้งาน</label>
-    <select id="usage_type">
+    <select id="usage_type" disabled>
       <option value="">เลือกประเภทการใช้งาน</option>
     </select>
 
@@ -72,5 +74,20 @@
 </body>
 
 <script src="js/index.js"></script>
+
+<script>
+    const calculate = async() => {
+        console.log(555);
+    };
+
+    $(document).on("change", "#meter_type", function() {
+        let motor_type = $(this).val();
+        console.log(motor_type);
+        let usage_type = $("#usage_type");
+        motor_type === "" ?
+            usage_type.attr("disabled", true) :
+            usage_type.removeAttr("disabled");
+    });
+</script>
 
 </html>
