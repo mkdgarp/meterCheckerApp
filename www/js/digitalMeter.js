@@ -1,21 +1,21 @@
 const digitalNormal = () => {
     let html = ''
-    html += 
-    `
+    html +=
+        `
         <div>
             <span>ป้อนค่ามิเตอร์ที่วัดได้</span>
         </div>
         <div><input class="form-control" type="text" value="" placeholder="CODE012/345" /></div>
         <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
     `
-        let renderDOM = $('.renderDOM')
-        renderDOM.html(html)
+    let renderDOM = $('.renderDOM')
+    renderDOM.html(html)
 }
 
 const digitalVApf = () => {
     let html = ''
-    html += 
-    `
+    html +=
+        `
         <div>
             <span>ป้อนค่า V , I , pf จากแคลมป์มิเตอร์</span>
         </div>
@@ -35,13 +35,13 @@ const digitalVApf = () => {
         <div><input class="form-control" type="text" value="" placeholder="CODE012/345" /></div>
         <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
     `
-        let renderDOM = $('.renderDOM')
-        renderDOM.html(html)
+    let renderDOM = $('.renderDOM')
+    renderDOM.html(html)
 }
 const digitalkWh = () => {
     let html = ''
-    html += 
-    `
+    html +=
+        `
         <div>
             <span>ป้อนค่า kW จากแคมป์มิเตอร์</span>
         </div>
@@ -55,6 +55,41 @@ const digitalkWh = () => {
         <div><input class="form-control" type="text" value="" placeholder="CODE012/345" /></div>
         <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
     `
-        let renderDOM = $('.renderDOM')
-        renderDOM.html(html)
+    let renderDOM = $('.renderDOM')
+    renderDOM.html(html)
+}
+
+const analogNormal = () => {
+    let html = ''
+    html += `
+    
+    <div>
+    
+    
+    </div>
+    `
+}
+
+
+const analogAVpf = () => {
+    let html = ''
+    html += `
+    
+    <div>
+    
+    
+    </div>
+    `
+}
+
+
+const analogKWh = () => {
+    let html = ''
+    html += `
+    
+    <div>
+    
+    
+    </div>
+    `
 }

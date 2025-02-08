@@ -42,6 +42,25 @@
             color: #666;
             font-size: 14px;
         }
+        
+        .timeDiv {
+            display: flex;
+            width: 100%;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .justCircle {
+            border-radius: 100%;
+            height: 100px;
+            width: 100px;
+        }
+        
+        .textTime {
+            font-size: 35px;
+            padding-top: 25px;
+        }
     </style>
 </head>
 
@@ -66,15 +85,19 @@
     <label>Rev./Impulse/kWh</label>
     <input type="number" id="rev_impulse" />
 
-    <div class="renderDOM">
+    <div class="renderDOM"></div>
+    <div class="timeDiv">
+        <!-- <h1>Stopwatch</h1> -->
 
-    </div>
-    <div>
-        <h1>Stopwatch</h1>
-        <div id="time">00:00:00</div>
-        <button id="start">Start</button>
-        <button id="stop">Stop</button>
-        <button id="reset">Reset</button>
+        <div>
+            <button class="justCircle bg-success" id="start">Start</button>
+
+            <button class="justCircle bg-danger" id="stop">Stop</button>
+        </div>
+        <div class="textTime" id="time">00:00:00</div>
+        <div>
+            <button class="justCircle bg-secondary" id="reset">Reset</button>
+        </div>
     </div>
 
     <p class="info-text">ผลการตรวจสอบมิเตอร์ไฟฟ้า (ค่ามาตรฐาน +- 2.5%)</p>
@@ -89,12 +112,12 @@
 <script>
     const calculate = async() => {
         console.log(555);
-        let textPreResultMeter = $('.textPreResultMeter')
-        textPreResultMeter.html('1.0281')
+        let textPreResultMeter = $(".textPreResultMeter");
+        textPreResultMeter.html("1.0281");
     };
 
     $(document).on("change", "#meter_type", function() {
-        digitalVApf()
+        digitalVApf();
         let motor_type = $(this).val();
         console.log(motor_type);
         let usage_type = $("#usage_type");
@@ -104,57 +127,57 @@
     });
 
     const clearElement = () => {
-        console('clear!')
-    }
-
-    
+        console("clear!");
+    };
 </script>
 <script>
-    $(document).ready(function () {
-        $('#stop').hide()
+    $(document).ready(function() {
+        $("#stop").hide();
         let timer;
         let milliseconds = 0;
         let running = false;
-        let notAgain = false
+        let notAgain = false;
 
         function formatTime(ms) {
             let sec = Math.floor(ms / 100);
             let milli = ms % 100;
-            return `${String(sec).padStart(2, '0')}.${String(milli).padStart(2, '0')}`;
+            return `${String(sec).padStart(
+          2,
+          "0"
+        )}.${String(milli).padStart(2, "0")}`;
         }
 
         function updateDisplay() {
-            $('#time').text(formatTime(milliseconds));
+            $("#time").text(formatTime(milliseconds));
         }
 
-        $('#start').click(function () {
-            
+        $("#start").click(function() {
             if (!running && !notAgain) {
-                $(this).hide()
-            $('#stop').show()
+                $(this).hide();
+                $("#stop").show();
                 running = true;
                 timer = setInterval(() => {
                     milliseconds++;
                     updateDisplay();
                 }, 10); // Runs every 10ms
             } else {
-                alert('pls click reset to start new record')
+                alert("pls click reset to start new record");
             }
         });
 
-        $('#stop').click(function () {
-            $(this).hide()
-            $('#start').show()
+        $("#stop").click(function() {
+            $(this).hide();
+            $("#start").show();
             running = false;
-            console.log(milliseconds/100)
+            console.log(milliseconds / 100);
             clearInterval(timer);
-            notAgain = true
+            notAgain = true;
         });
 
-        $('#reset').click(function () {
-            notAgain = false
-            $('#start').show()
-            $('#stop').hide()
+        $("#reset").click(function() {
+            notAgain = false;
+            $("#start").show();
+            $("#stop").hide();
             clearInterval(timer);
             running = false;
             milliseconds = 0;
@@ -165,4 +188,5 @@
     });
 </script>
 <script src="js/digitalMeter.js"></script>
+
 </html>
