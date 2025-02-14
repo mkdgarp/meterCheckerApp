@@ -72,7 +72,7 @@
 </head>
 
 <body>
-    <h1>มิเตอร์ประเภท 1P 2W</h1>
+    <h1>มิเตอร์ประเภท 3P 4W</h1>
 
     <input type="text" id="pea_no" placeholder="PEA No." />
 
@@ -86,26 +86,24 @@
     <label>ประเภทการใช้งาน</label>
     <select class="form-select" id="usage_type" disabled>
       <option value="">เลือกประเภทการใช้งาน</option>
-      <!-- <option value="1">ปกติ</option> -->
-      <option value="2">ป้อน V,A,pf</option>
-      <option value="3">ป้อน kWh</option>
+      <option value="1">ปกติ</option>
+      <option value="2">ปกติ ป้อน V,A,pf</option>
+      <option value="3">ปกติ ป้อน kWh</option>
     </select>
 
     <div class="renderDOM"></div>
     <div class="renderTime"></div>
 
     <div style="display: inline-grid; width: 100%; margin-top: 35px">
-        <span class="info-text">ผลการตรวจสอบมิเตอร์ไฟฟ้า (ค่ามาตรฐาน +- 2.5%)</span
-      >
+        <span class="info-text">ผลการตรวจสอบมิเตอร์ไฟฟ้า (ค่ามาตรฐาน +- 2.5%)</span>
 
-      <div class="info-text">
-        ค่าผิดพลาด Error: <span class="error-text"> 0.0000</span>
-    </div>
-    <span class="info-text">สรุปผลการตรวจสอบ: รอผลการทดสอบ</span>
+        <div class="info-text">
+            ค่าผิดพลาด Error: <span class="error-text"> 0.0000</span>
+        </div>
+        <span class="info-text">สรุปผลการตรวจสอบ: รอผลการทดสอบ</span>
     </div>
 
     <button class="rounded-5" onclick="calculate()">คำนวณ</button>
-    <button onclick="calError()">dummy test</button>
 </body>
 
 <script src="js/index.js"></script>
@@ -132,15 +130,7 @@
         if (meter_type === "") {
             usage_type.attr("disabled", true);
         } else {
-            let renderDOM = $('.renderDOM')
-            let html = ''
-            html += `${fixREV}`
-            renderDOM.html(html)
-            console.log('555')
             usage_type.removeAttr("disabled");
-            if (meter_type == 'analog') {
-                renderAnalog();
-            }
         }
     });
     $(document).on("change", "#usage_type", function() {
@@ -152,10 +142,10 @@
                 clearElement();
                 renderAnalog();
                 switch (usage_type.val()) {
-                    // case "1":
-                    //     console.log("analog/usage_type/1");
-                    //     analogNormal();
-                    //     break;
+                    case "1":
+                        console.log("analog/usage_type/1");
+                        analogNormal()
+                        break;
                     case "2":
                         console.log("analog/usage_type/2");
                         analogAVpf();
@@ -174,10 +164,10 @@
             case "digital":
                 clearElement();
                 switch (usage_type.val()) {
-                    // case "1":
-                    //     console.log("digital/usage_type/1");
-                    //     digitalNormal();
-                    //     break;
+                    case "1":
+                        console.log("digital/usage_type/1");
+                        digitalNormal();
+                        break;
                     case "2":
                         console.log("digital/usage_type/2");
                         digitalVApf();
@@ -226,6 +216,6 @@
         $(".renderTime,.renderDOM").html("");
     };
 </script>
-<script src="js/meter1p2w.js"></script>
+<script src="js/meter3p4w.js"></script>
 
 </html>
