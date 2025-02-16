@@ -101,11 +101,11 @@
       <div class="info-text">
         ค่าผิดพลาด Error: <span class="error-text"> 0.0000</span>
     </div>
-    <span class="info-text">สรุปผลการตรวจสอบ: รอผลการทดสอบ</span>
+    <span class="info-text">สรุปผลการตรวจสอบ: <span class="error-result">รอผลการทดสอบ</span></span>
     </div>
 
     <button class="rounded-5" onclick="calculate()">คำนวณ</button>
-    <button onclick="calError()">dummy test</button>
+    <button onclick="calError()">dummy test 1p2w</button>
 </body>
 
 <script src="js/index.js"></script>
@@ -116,7 +116,7 @@
     let running = false;
     let notAgain = false;
     let meter_type = "";
-
+    let usage_type = "";
     const calculate = async() => {
         console.log(555);
         let textPreResultMeter = $(".textPreResultMeter");
@@ -127,31 +127,31 @@
         clearElement();
         meter_type = $(this).val();
         console.log("meter_type change", meter_type);
-        let usage_type = $("#usage_type");
+        usage_type = $("#usage_type");
         usage_type.val("");
         if (meter_type === "") {
             usage_type.attr("disabled", true);
         } else {
-            let renderDOM = $('.renderDOM')
-            let html = ''
-            html += `${fixREV}`
-            renderDOM.html(html)
-            console.log('555')
+            let renderDOM = $(".renderDOM");
+            let html = "";
+            html += `${fixREV}`;
+            renderDOM.html(html);
+            console.log("555");
             usage_type.removeAttr("disabled");
-            if (meter_type == 'analog') {
+            if (meter_type == "analog") {
                 renderAnalog();
             }
         }
     });
     $(document).on("change", "#usage_type", function() {
         clearElement();
-        let usage_type = $(this);
+        usage_type = $(this).val();
         console.log(usage_type);
         switch (meter_type) {
             case "analog":
                 clearElement();
                 renderAnalog();
-                switch (usage_type.val()) {
+                switch (usage_type) {
                     // case "1":
                     //     console.log("analog/usage_type/1");
                     //     analogNormal();
@@ -173,7 +173,7 @@
                 break;
             case "digital":
                 clearElement();
-                switch (usage_type.val()) {
+                switch (usage_type) {
                     // case "1":
                     //     console.log("digital/usage_type/1");
                     //     digitalNormal();
@@ -209,7 +209,7 @@
                 <button class="justCircle bg-secondary" id="reset">Reset</button>
             </div>
         </div>
-        <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
+        <div class="preResultMether">ค่า kW ที่มิเตอร์วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
         `;
         $(".renderTime").html(html);
 
@@ -224,8 +224,28 @@
     const clearElement = () => {
         console.log("clear all!");
         $(".renderTime,.renderDOM").html("");
+        $(".kwResult,.error-text,.textPreResultMeter").html("0.0000");
+        $(".error-result").html("รอผลการทดสอบ");
     };
 </script>
 <script src="js/meter1p2w.js"></script>
+<script>
+    const calError = () => {
+        let result = 0;
+        result = (calPrev() / calPmea() - 1) * 100;
+
+        console.log("error", result.toFixed(4));
+        $(".error-text").html(result.toFixed(4));
+
+        if (isNaN(result)) {
+            $(".error-result").html('<b class="text-danger">ไม่สามารถคำนวณได้</b>');
+        } else if (result.toFixed(4) < -2.5 || result.toFixed(4) > 2.5) {
+            $(".error-result").html('<b class="text-danger">ไม่ผ่านการทดสอบ</b>');
+        } else {
+            $(".error-result").html('<b class="text-success">ผ่านการทดสอบ</b>');
+        }
+        return result.toFixed(4);
+    };
+</script>
 
 </html>

@@ -1,5 +1,58 @@
 const fixREV = `<input type="number" id="rev_impulse" placeholder="Rev,Impulse/kWh" />`
 
+let Pmea = 0
+let Prev = 0
+let errorResult = 0
+let kwManual = 0 //ค่ากรอกเอง digital
+let kwResult = 0 //ค่าที่ใช้จริง
+let kwMeasured = 0 //ค่าที่วัดได้ .textPreResultMeter
+
+const calPmea = () => {
+    console.log('calPmea')
+    if (usage_type == 2) {
+        // let v = $('.Vvalue').val()
+        // let i = $('.Avalue').val()
+        // let pf = $('.PFvalue').val()
+        let v = 236
+        let i = 13.85
+        let pf = 0.84
+
+        Pmea = v * i * pf
+    } else if (usage_type == 3) {
+        let kw = $('.KWvalue').val()
+        Pmea = kw * 1
+    }
+    console.log('Pmea', Pmea.toFixed(4));
+    $('.kwResult').html(Pmea.toFixed(4))
+    return Pmea.toFixed(4)
+
+}
+
+const calPrev = () => {
+    console.log('calPrev')
+    if (meter_type == 'analog') {
+        let a = 400;
+        let b = 3600;
+        let c = 1;
+        let d = 3.06;
+        // let a = $('#rev_impulse').val();
+        // let b = 3600;
+        // let c = $('.roundTest').val();
+        // let d = milliseconds;
+
+        console.log((b / a), (c / d))
+
+        let result = ((b / a) * (c / d)) * 1000;
+        console.log('Prev', result.toFixed(4));
+
+        $('.textPreResultMeter').html(result.toFixed(4))
+        return result.toFixed(4);
+    } else if (meter_type == 'analog') {
+
+    }
+};
+
+
 const digitalNormal = () => {
     let html = ''
     html +=
@@ -8,7 +61,7 @@ const digitalNormal = () => {
         <div>
             <b>ป้อนค่า kW ที่มิเตอร์วัดได้</b>
         </div>
-        <div><input class="form-control" type="text" value="" placeholder="CODE012/345" /></div>
+        <div><input class="form-control" type="text" value="" placeholder="CODE 093/097" /></div>
         <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
         
         
@@ -33,21 +86,21 @@ const digitalVApf = () => {
         <div class="d-inline-flex align-items-center w-100">
         
             <label class="form-label" style="width: 70px;">แรงดัน(V)</label>
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label" style="width: 70px;">กระแส(A)</label>
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label" style="width: 70px;">Power<br/>factor(pf.)</label>
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label" style="width: 70px;">ค่าkWแต่ละเฟส</label>
@@ -59,7 +112,7 @@ const digitalVApf = () => {
         <div class="mt-2">
             <b>ป้อนค่า kW ที่มิเตอร์วัดได้</b>
         </div>
-        <div><input class="form-control" type="text" value="" placeholder="CODE012/345" /></div>
+        <div><input class="form-control" type="text" value="" placeholder="CODE 093/097" /></div>
         <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
     `
     let renderDOM = $('.renderDOM')
@@ -80,15 +133,15 @@ const digitalkWh = () => {
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label " style="width: 70px;">ค่า kW</label>
-            <input class="form-control ms-auto w-25" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value="" />
-            <input class="form-control ms-auto w-25" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value="" />
-            <input class="form-control ms-auto w-25" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value="" />
+            <input class="form-control ms-auto w-25" type="text" value="" />
+            <input class="form-control ms-auto w-25" type="text" value="" />
+            <input class="form-control ms-auto w-25" type="text" value="" />
             </div>
         <div>ค่ารวมkWที่ใช้จริง : <span class="text-danger">0.0000</span></div>
         <div class="mt-2">
             <b>ป้อนค่า kW ที่มิเตอร์วัดได้</b>
         </div>
-        <div><input class="form-control" type="text" value="" placeholder="CODE012/345" /></div>
+        <div><input class="form-control" type="text" value="" placeholder="CODE 093/097" /></div>
         <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
         
 
@@ -145,21 +198,21 @@ const analogKWh = () => {
         <div class="d-inline-flex align-items-center w-100">
         
             <label class="form-label" style="width: 70px;">แรงดัน(V)</label>
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label" style="width: 70px;">กระแส(A)</label>
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label" style="width: 70px;">Power<br/>factor(pf.)</label>
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label" style="width: 70px;">ค่าkWแต่ละเฟส</label>
@@ -190,9 +243,9 @@ const analogAVpf = () => {
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label " style="width: 70px;">ค่า kW</label>
-            <input class="form-control ms-auto w-25" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value="" />
-            <input class="form-control ms-auto w-25" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value="" />
-            <input class="form-control ms-auto w-25" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value="" />
+            <input class="form-control ms-auto w-25" type="text" value="" />
+            <input class="form-control ms-auto w-25" type="text" value="" />
+            <input class="form-control ms-auto w-25" type="text" value="" />
             </div>
         <div>ค่ารวมkWที่ใช้จริง : <span class="text-danger">0.0000</span></div>
     </div>

@@ -86,9 +86,9 @@
     <label>ประเภทการใช้งาน</label>
     <select class="form-select" id="usage_type" disabled>
       <option value="">เลือกประเภทการใช้งาน</option>
-      <option value="1">ปกติ</option>
-      <option value="2">ปกติ ป้อน V,A,pf</option>
-      <option value="3">ปกติ ป้อน kWh</option>
+      <!-- <option value="1">ปกติ</option> -->
+      <option value="2">ป้อน V,A,pf</option>
+      <option value="3">ป้อน kWh</option>
     </select>
 
     <div class="renderDOM"></div>
@@ -100,10 +100,11 @@
         <div class="info-text">
             ค่าผิดพลาด Error: <span class="error-text"> 0.0000</span>
         </div>
-        <span class="info-text">สรุปผลการตรวจสอบ: รอผลการทดสอบ</span>
+        <span class="info-text">สรุปผลการตรวจสอบ: <span class="error-result">รอผลการทดสอบ</span></span>
     </div>
 
     <button class="rounded-5" onclick="calculate()">คำนวณ</button>
+    <button onclick="calError()">dummy test 3p4w</button>
 </body>
 
 <script src="js/index.js"></script>
@@ -114,7 +115,7 @@
     let running = false;
     let notAgain = false;
     let meter_type = "";
-
+    let usage_type = "";
     const calculate = async() => {
         console.log(555);
         let textPreResultMeter = $(".textPreResultMeter");
@@ -125,27 +126,35 @@
         clearElement();
         meter_type = $(this).val();
         console.log("meter_type change", meter_type);
-        let usage_type = $("#usage_type");
+        usage_type = $("#usage_type");
         usage_type.val("");
         if (meter_type === "") {
             usage_type.attr("disabled", true);
         } else {
+            let renderDOM = $(".renderDOM");
+            let html = "";
+            html += `${fixREV}`;
+            renderDOM.html(html);
+            console.log("555");
             usage_type.removeAttr("disabled");
+            if (meter_type == "analog") {
+                renderAnalog();
+            }
         }
     });
     $(document).on("change", "#usage_type", function() {
         clearElement();
-        let usage_type = $(this);
+        usage_type = $(this).val();
         console.log(usage_type);
         switch (meter_type) {
             case "analog":
                 clearElement();
                 renderAnalog();
-                switch (usage_type.val()) {
-                    case "1":
-                        console.log("analog/usage_type/1");
-                        analogNormal()
-                        break;
+                switch (usage_type) {
+                    // case "1":
+                    //     console.log("analog/usage_type/1");
+                    //     analogNormal();
+                    //     break;
                     case "2":
                         console.log("analog/usage_type/2");
                         analogAVpf();
@@ -163,11 +172,11 @@
                 break;
             case "digital":
                 clearElement();
-                switch (usage_type.val()) {
-                    case "1":
-                        console.log("digital/usage_type/1");
-                        digitalNormal();
-                        break;
+                switch (usage_type) {
+                    // case "1":
+                    //     console.log("digital/usage_type/1");
+                    //     digitalNormal();
+                    //     break;
                     case "2":
                         console.log("digital/usage_type/2");
                         digitalVApf();
@@ -199,7 +208,7 @@
                 <button class="justCircle bg-secondary" id="reset">Reset</button>
             </div>
         </div>
-        <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
+        <div class="preResultMether">ค่า kW ที่มิเตอร์วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
         `;
         $(".renderTime").html(html);
 
@@ -214,6 +223,8 @@
     const clearElement = () => {
         console.log("clear all!");
         $(".renderTime,.renderDOM").html("");
+        $(".kwResult,.error-text,.textPreResultMeter").html("0.0000");
+        $(".error-result").html("รอผลการทดสอบ");
     };
 </script>
 <script src="js/meter3p4w.js"></script>

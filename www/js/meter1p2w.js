@@ -8,50 +8,71 @@ let kwResult = 0 //ค่าที่ใช้จริง
 let kwMeasured = 0 //ค่าที่วัดได้ .textPreResultMeter
 
 const calPmea = () => {
-    let v = $('.Vvalue').val()
-    let i = $('.Avalue').val()
-    let pf = $('.PFvalue').val()
-        // let v = 236
-        // let i = 13.85
-        // let pf = 0.84
+    console.log('calPmea')
+    if (usage_type == 2) {
+        let v = $('.Vvalue').val()
+        let i = $('.Avalue').val()
+        let pf = $('.PFvalue').val()
+            // let v = 236
+            // let i = 13.85
+            // let pf = 0.84
 
-    Pmea = v * i * pf
+        Pmea = v * i * pf
+            // console.log('Pmea', Pmea.toFixed(4));
+            // $('.kwResult').html(Pmea.toFixed(4))
+            // return Pmea.toFixed(4)
+    } else if (usage_type == 3) {
+        let kw = $('.KWvalue').val()
+        Pmea = kw * 1
+            // console.log('Pmea', Pmea.toFixed(4));
+            // $('.kwResult').html(Pmea.toFixed(4))
+            // return Pmea.toFixed(4)
+    }
     console.log('Pmea', Pmea.toFixed(4));
+    $('.kwResult').html(Pmea.toFixed(4))
     return Pmea.toFixed(4)
+
 }
 
-//only analog//
 const calPrev = () => {
-    let a = 400;
-    let b = 3600;
-    let c = 1;
-    let d = 3.06;
+    console.log('calPrev')
+    let result
+    if (meter_type == 'analog') {
+        // let a = 400;
+        // let b = 3600;
+        // let c = 1;
+        // let d = 3.06;
+        let a = $('#rev_impulse').val();
+        let b = 3600;
+        let c = $('.roundTest').val();
+        let d = milliseconds;
 
-    console.log((b / a), (c / d))
+        console.log((b / a), (c / d))
 
-    let result = ((b / a) * (c / d)) * 1000;
+        result = ((b / a) * (c / d)) * 1000;
+
+    } else if (meter_type == 'digital') {
+        let CODEvalue = $('.CODEvalue').val()
+
+        result = CODEvalue * 1
+    }
+
     console.log('Prev', result.toFixed(4));
 
+    $('.textPreResultMeter').html(result.toFixed(4))
     return result.toFixed(4);
 };
 
-const calError = () => {
-    let result = ((calPrev() / calPmea()) - 1) * 100
-    console.log('error', result.toFixed(4))
-    return result.toFixed(4)
-}
 
 const digitalNormal = () => {
     let html = ''
     html +=
         `
-        ${fixREV}
-
         <div>
             <b>ป้อนค่า kW ที่มิเตอร์วัดได้</b>
         </div>
-        <div><input class="form-control" type="text" value="" placeholder="CODE012/345" /></div>
-        <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
+        <div><input class="form-control CODEvalue" type="number" value="" placeholder="CODE 093/097" /></div>
+        <div class="preResultMether">ค่า KW ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
         
     `
     let renderDOM = $('.renderDOM')
@@ -62,26 +83,24 @@ const digitalVApf = () => {
     let html = ''
     html +=
         `
-        
-        ${fixREV}
         <div>
             <b>ป้อนค่า V , I , pf จากแคลมป์มิเตอร์</b>
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label">แรงดัน(V)</label>
-            <input class="form-control ms-auto w-25 Vvalue" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  /></div>
+            <input class="form-control ms-auto w-25 Vvalue" type="number" value=""  /></div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label">กระแส(A)</label>
-            <input class="form-control ms-auto w-25 Avalue" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value=""  /></div>
+            <input class="form-control ms-auto w-25 Avalue" type="number" value=""  /></div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label">Powerfactor(pf.)</label>
-            <input class="form-control ms-auto w-25 PFvalue" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value="" /></div>
+            <input class="form-control ms-auto w-25 PFvalue" type="number" value="" /></div>
         <div class="">ค่าkWที่ใช้จริง <span class=" text-danger kwResult">0.0000</span></div>
         <div class="mt-2">
             <b>ป้อนค่า kW ที่มิเตอร์วัดได้</b>
         </div>
-        <div><input class="form-control" type="text" value="" placeholder="CODE012/345" /></div>
-        <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
+        <div><input class="form-control CODEvalue" type="number" value="" placeholder="CODE 093/097" /></div>
+        <div class="preResultMether">ค่า KW ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
     `
     let renderDOM = $('.renderDOM')
     renderDOM.html(html)
@@ -90,20 +109,18 @@ const digitalkWh = () => {
     let html = ''
     html +=
         `
-        
-        ${fixREV}
         <div>
             <b>ป้อนค่า kW จากแคมป์มิเตอร์</b>
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label">ค่า kW</label>
-            <input class="form-control ms-auto w-25" onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" value="" /></div>
-        <div>ค่าkWที่ใช้จริง : <span class="text-danger">0.0000</span></div>
+            <input class="form-control ms-auto w-25 KWvalue" type="number" value="" /></div>
+        <div>ค่าkWที่ใช้จริง : <span class="text-danger kwResult">0.0000</span></div>
         <div class="mt-2">
             <b>ป้อนค่า kW ที่มิเตอร์วัดได้</b>
         </div>
-        <div><input class="form-control" type="text" value="" placeholder="CODE012/345" /></div>
-        <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
+        <div><input class="form-control CODEvalue" type="number" value="" placeholder="CODE 093/097" /></div>
+        <div class="preResultMether">ค่า KW ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
         
 
     `
@@ -112,7 +129,7 @@ const digitalkWh = () => {
 }
 
 const analogRound = `
-<div class="roundTest">
+<div >
             <div>รอบจานหมุนที่ทดสอบ</div>
             <div>
                 <select class="form-select roundTest">
@@ -155,7 +172,7 @@ const analogKWh = () => {
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label">ค่า kW</label>
-            <input class="form-control ms-auto w-25" type="text" value="" /></div>
+            <input class="form-control ms-auto w-25 KWvalue" type="number" value="" /></div>
         <div>ค่าkWที่ใช้จริง : <span class="text-danger kwResult">0.0000</span></div>
     
     </div>
@@ -176,14 +193,14 @@ const analogAVpf = () => {
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label">แรงดัน(V)</label>
-            <input class="form-control ms-auto w-25" type="text" value=""  /></div>
+            <input class="form-control ms-auto w-25 Vvalue" type="number" value=""  /></div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label">กระแส(A)</label>
-            <input class="form-control ms-auto w-25" type="text" value=""  /></div>
+            <input class="form-control ms-auto w-25 Avalue" type="number" value=""  /></div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label">Powerfactor(pf.)</label>
-            <input class="form-control ms-auto w-25" type="text" value="" /></div>
-        <div class="">ค่าkWที่ใช้จริง <span class=" text-danger kwResult">0.0000</span></div>
+            <input class="form-control ms-auto w-25 PFvalue" type="number" value="" /></div>
+        <div class="">ค่า kW ที่ใช้จริง <span class=" text-danger kwResult">0.0000</span></div>
     </div>
     `
 
