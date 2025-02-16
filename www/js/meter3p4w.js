@@ -13,16 +13,26 @@ const calPmea = () => {
         // let v = $('.Vvalue').val()
         // let i = $('.Avalue').val()
         // let pf = $('.PFvalue').val()
-        let v = 236
-        let i = 13.85
-        let pf = 0.84
+        // let v = 236
+        // let i = 13.85
+        // let pf = 0.84
 
-        Pmea = v * i * pf
+        let Pmea_A = $('.Vvalue_A').val() * $('.Avalue_A').val() * $('.PFvalue_A').val() 
+        let Pmea_B = $('.Vvalue_B').val() * $('.Avalue_B').val() * $('.PFvalue_B').val()
+        let Pmea_C = $('.Vvalue_C').val() * $('.Avalue_C').val() * $('.PFvalue_C').val()
+
+
+        console.log('pmea',Pmea_A,Pmea_B,Pmea_C)
+        Pmea = ((Pmea_A + Pmea_B + Pmea_C) * Math.sqrt(3))
     } else if (usage_type == 3) {
-        let kw = $('.KWvalue').val()
-        Pmea = kw * 1
+        let kw_A = $('.KWvalue_A').val()
+        let kw_B = $('.KWvalue_B').val()
+        let kw_C = $('.KWvalue_C').val()
+        Pmea = ((kw_A + kw_B + kw_C) * Math.sqrt(3))
+        console.log(kw_A,kw_B,kw_C)
     }
     console.log('Pmea', Pmea.toFixed(4));
+    
     $('.kwResult').html(Pmea.toFixed(4))
     return Pmea.toFixed(4)
 
@@ -30,26 +40,31 @@ const calPmea = () => {
 
 const calPrev = () => {
     console.log('calPrev')
+    let result
     if (meter_type == 'analog') {
-        let a = 400;
-        let b = 3600;
-        let c = 1;
-        let d = 3.06;
-        // let a = $('#rev_impulse').val();
+        // let a = 400;
         // let b = 3600;
-        // let c = $('.roundTest').val();
-        // let d = milliseconds;
+        // let c = 1;
+        // let d = 3.06;
+        let a = $('#rev_impulse').val();
+        let b = 3600;
+        let c = $('.roundTest').val();
+        let d = milliseconds;
 
         console.log((b / a), (c / d))
 
-        let result = ((b / a) * (c / d)) * 1000;
-        console.log('Prev', result.toFixed(4));
+        result = ((b / a) * (c / d)) * 1000;
 
-        $('.textPreResultMeter').html(result.toFixed(4))
-        return result.toFixed(4);
-    } else if (meter_type == 'analog') {
+    } else if (meter_type == 'digital') {
+        let CODEvalue = $('.CODEvalue').val()
 
+        result = CODEvalue * 1
     }
+
+    console.log('Prev', result.toFixed(4));
+
+    $('.textPreResultMeter').html(result.toFixed(4))
+    return result.toFixed(4);
 };
 
 
@@ -61,7 +76,7 @@ const digitalNormal = () => {
         <div>
             <b>ป้อนค่า kW ที่มิเตอร์วัดได้</b>
         </div>
-        <div><input class="form-control" type="text" value="" placeholder="CODE 093/097" /></div>
+        <div><input class="form-control CODEvalue" type="text" value="" placeholder="CODE 093/097" /></div>
         <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
         
         
@@ -86,21 +101,21 @@ const digitalVApf = () => {
         <div class="d-inline-flex align-items-center w-100">
         
             <label class="form-label" style="width: 70px;">แรงดัน(V)</label>
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center Vvalue_A" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center Vvalue_B" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center Vvalue_C" type="text" value=""  />
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label" style="width: 70px;">กระแส(A)</label>
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center Avalue_A" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center Avalue_B" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center Avalue_C" type="text" value=""  />
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label" style="width: 70px;">Power<br/>factor(pf.)</label>
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center PFvalue_A" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center PFvalue_B" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center PFvalue_C" type="text" value=""  />
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label" style="width: 70px;">ค่าkWแต่ละเฟส</label>
@@ -108,11 +123,11 @@ const digitalVApf = () => {
             <input class="form-control ms-auto w-25 text-center text-danger border-0 bg-white" disabled type="text" value="0.0000"  />
             <input class="form-control ms-auto w-25 text-center text-danger border-0 bg-white" disabled type="text" value="0.0000"  />
         </div>
-        <div class="">ค่ารวมkWที่ใช้จริง <span class=" text-danger ">0.0000</span></div>
+        <div class="">ค่ารวมkWที่ใช้จริง <span class=" text-danger kwResult ">0.0000</span></div>
         <div class="mt-2">
             <b>ป้อนค่า kW ที่มิเตอร์วัดได้</b>
         </div>
-        <div><input class="form-control" type="text" value="" placeholder="CODE 093/097" /></div>
+        <div><input class="form-control CODEvalue" type="text" value="" placeholder="CODE 093/097" /></div>
         <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
     `
     let renderDOM = $('.renderDOM')
@@ -133,15 +148,15 @@ const digitalkWh = () => {
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label " style="width: 70px;">ค่า kW</label>
-            <input class="form-control ms-auto w-25" type="text" value="" />
-            <input class="form-control ms-auto w-25" type="text" value="" />
-            <input class="form-control ms-auto w-25" type="text" value="" />
+            <input class="form-control ms-auto w-25 KWvalue_A" type="text" value="" />
+            <input class="form-control ms-auto w-25 KWvalue_B" type="text" value="" />
+            <input class="form-control ms-auto w-25 KWvalue_C" type="text" value="" />
             </div>
-        <div>ค่ารวมkWที่ใช้จริง : <span class="text-danger">0.0000</span></div>
+        <div>ค่ารวมkWที่ใช้จริง : <span class="text-danger kwResult">0.0000</span></div>
         <div class="mt-2">
             <b>ป้อนค่า kW ที่มิเตอร์วัดได้</b>
         </div>
-        <div><input class="form-control" type="text" value="" placeholder="CODE 093/097" /></div>
+        <div><input class="form-control CODEvalue" type="text" value="" placeholder="CODE 093/097" /></div>
         <div class="preResultMether">ค่ามิเตอร์ที่วัดได้ <span class="textPreResultMeter text-danger">0.0000</span></div>
         
 
@@ -198,21 +213,21 @@ const analogKWh = () => {
         <div class="d-inline-flex align-items-center w-100">
         
             <label class="form-label" style="width: 70px;">แรงดัน(V)</label>
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center Vvalue_A" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center Vvalue_B" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center Vvalue_C" type="text" value=""  />
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label" style="width: 70px;">กระแส(A)</label>
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center Avalue_A" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center Avalue_B" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center Avalue_C" type="text" value=""  />
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label" style="width: 70px;">Power<br/>factor(pf.)</label>
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
-            <input class="form-control ms-auto w-25 text-center" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center PFvalue_A" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center PFvalue_B" type="text" value=""  />
+            <input class="form-control ms-auto w-25 text-center PFvalue_C" type="text" value=""  />
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label" style="width: 70px;">ค่าkWแต่ละเฟส</label>
@@ -220,7 +235,13 @@ const analogKWh = () => {
             <input class="form-control ms-auto w-25 text-center text-danger border-0 bg-white" disabled type="text" value="0.0000"  />
             <input class="form-control ms-auto w-25 text-center text-danger border-0 bg-white" disabled type="text" value="0.0000"  />
         </div>
-        <div class="">ค่ารวมkWที่ใช้จริง <span class=" text-danger">0.0000</span></div>
+        <div class="d-inline-flex align-items-center w-100">
+            <label class="form-label" style="width: 70px;">ค่าkWแต่ละเฟส</label>
+            <input class="form-control ms-auto w-25 text-center text-danger border-0 bg-white" disabled type="text" value="0.0000"  />
+            <input class="form-control ms-auto w-25 text-center text-danger border-0 bg-white" disabled type="text" value="0.0000"  />
+            <input class="form-control ms-auto w-25 text-center text-danger border-0 bg-white" disabled type="text" value="0.0000"  />
+        </div>
+        <div class="">ค่ารวมkWที่ใช้จริง <span class=" text-danger kwResult">0.0000</span></div>
     
     </div>
     `
@@ -243,11 +264,11 @@ const analogAVpf = () => {
         </div>
         <div class="d-inline-flex align-items-center w-100">
             <label class="form-label " style="width: 70px;">ค่า kW</label>
-            <input class="form-control ms-auto w-25" type="text" value="" />
-            <input class="form-control ms-auto w-25" type="text" value="" />
-            <input class="form-control ms-auto w-25" type="text" value="" />
+            <input class="form-control ms-auto w-25 KWvalue_A" type="text" value="" />
+            <input class="form-control ms-auto w-25 KWvalue_B" type="text" value="" />
+            <input class="form-control ms-auto w-25 KWvalue_C" type="text" value="" />
             </div>
-        <div>ค่ารวมkWที่ใช้จริง : <span class="text-danger">0.0000</span></div>
+        <div>ค่ารวมkWที่ใช้จริง : <span class="text-danger kwResult">0.0000</span></div>
     </div>
     `
 
