@@ -13,6 +13,7 @@
         body {
             padding: 20px;
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #9e64fc;
         }
         
         input,
@@ -43,21 +44,41 @@
             color: #666;
             font-size: 14px;
         }
+        
+        .bg {
+            background-image: url(img/bg.png);
+            width: 100%;
+            height: -webkit-fill-available;
+            position: absolute;
+            z-index: -1;
+            background-repeat: no-repeat;
+            background-position: center;
+            left: 0;
+            mix-blend-mode: multiply;
+            opacity: 0.7;
+        }
     </style>
 </head>
 
 <body>
-    <h1 style="text-align: center; margin-bottom: 30px;">โปรแกรมช่วยตรวจสอบมิเตอร์</h1>
+    <h1 style="text-align: center;
+    margin-bottom: 30px;
+    font-size: 26px;
+    font-weight: 400;
+    color: white;">
+        โปรแกรมช่วยตรวจสอบมิเตอร์
+    </h1>
 
     <div class="container">
-        <button onclick="location.href='meter1p2w.html'" style="margin-bottom: 20px;">
-            มิเตอร์ประเภท 1 P 2 W
-        </button>
+        <button onclick="location.href='meter1p2w.html'" class="rounded-5" style="margin-bottom: 20px">
+        มิเตอร์ประเภท 1 P 2 W
+      </button>
 
-        <button onclick="location.href='meter3p4w.html'">
-            มิเตอร์ประเภท 3 P 4 W
-        </button>
+        <button onclick="location.href='meter3p4w.html'" class="rounded-5">
+        มิเตอร์ประเภท 3 P 4 W
+      </button>
     </div>
+    <div class="bg"></div>
 </body>
 
 <script src="js/index.js"></script>

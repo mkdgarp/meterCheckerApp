@@ -63,7 +63,7 @@
             padding-top: 25px;
         }
         
-        .roundTest {
+        .roundTestDIV {
             display: flex;
             align-items: center;
             justify-content: space-around;
@@ -103,8 +103,8 @@
         <span class="info-text">สรุปผลการตรวจสอบ: <span class="error-result">รอผลการทดสอบ</span></span>
     </div>
 
-    <button class="rounded-5" onclick="calculate()">คำนวณ</button>
-    <button onclick="calError()">dummy test 3p4w</button>
+    <button class="rounded-5" onclick="calError()">คำนวณ</button>
+    <!-- <button onclick="calError()">dummy test 3p4w</button> -->
 </body>
 
 <script src="js/index.js"></script>
@@ -230,6 +230,10 @@
 <script src="js/meter3p4w.js"></script>
 <script>
     const calError = () => {
+        if (usage_type == '' || meter_type == '') {
+            alert('กรุณาเลือกชนิดมิเตอร์ และ ประเภทการใช้งาน ก่อนกดปุ่มคำนวณ')
+            return
+        }
         let result = 0;
         result = (calPrev() / calPmea() - 1) * 100;
 
@@ -246,4 +250,5 @@
         return result.toFixed(4);
     };
 </script>
+
 </html>

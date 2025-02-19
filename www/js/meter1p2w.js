@@ -129,7 +129,7 @@ const digitalkWh = () => {
 }
 
 const analogRound = `
-<div >
+<div class="roundTestDIV" >
             <div>รอบจานหมุนที่ทดสอบ</div>
             <div>
                 <select class="form-select roundTest">
@@ -167,7 +167,7 @@ const analogKWh = () => {
     
     <div>
     ${fixREV} 
-    <div>
+    </div>
             <b>ป้อนค่า kW จากแคมป์มิเตอร์</b>
         </div>
         <div class="d-inline-flex align-items-center w-100">
@@ -188,7 +188,7 @@ const analogAVpf = () => {
     
     <div>
     ${fixREV}
-    <div>
+    </div>
             <b>ป้อนค่า V , I , pf จากแคลมป์มิเตอร์</b>
         </div>
         <div class="d-inline-flex align-items-center w-100">

@@ -63,7 +63,7 @@
             padding-top: 25px;
         }
         
-        .roundTest {
+        .roundTestDIV {
             display: flex;
             align-items: center;
             justify-content: space-around;
@@ -104,8 +104,9 @@
     <span class="info-text">สรุปผลการตรวจสอบ: <span class="error-result">รอผลการทดสอบ</span></span>
     </div>
 
-    <button class="rounded-5" onclick="calculate()">คำนวณ</button>
-    <button onclick="calError()">dummy test 1p2w</button>
+    <button class="rounded-5" onclick="calError()">คำนวณ</button>
+    <button class="rounded-5 mt-3" onclick="captureScreen()">บันทึกรูปภาพ</button>
+    <!-- <button onclick="calError()">dummy test 1p2w</button> -->
 </body>
 
 <script src="js/index.js"></script>
@@ -231,6 +232,10 @@
 <script src="js/meter1p2w.js"></script>
 <script>
     const calError = () => {
+        if (usage_type == '' || meter_type == '') {
+            alert('กรุณาเลือกชนิดมิเตอร์ และ ประเภทการใช้งาน ก่อนกดปุ่มคำนวณ')
+            return
+        }
         let result = 0;
         result = (calPrev() / calPmea() - 1) * 100;
 
@@ -247,5 +252,27 @@
         return result.toFixed(4);
     };
 </script>
+
+<!-- <script>
+    // เพิ่มฟังก์ชั่นบันทึกภาพหน้าจอ
+    function captureScreen() {
+        // ตรวจสอบว่าอยู่ใน Cordova environment
+        if (!window.navigator.camera) {
+            alert("กรุณาใช้งานในแอพพลิเคชั่น");
+            return;
+        }
+
+        // ใช้ plugin screenshot เพื่อจับภาพหน้าจอ
+        navigator.screenshot.save(function(error, res) {
+            if (error) {
+                console.error(error);
+                alert("เกิดข้อผิดพลาดในการบันทึกภาพ");
+            } else {
+                console.log('Screenshot saved', res.filePath);
+                alert("บันทึกภาพสำเร็จ\nที่อยู่ไฟล์: " + res.filePath);
+            }
+        }, 'jpg', 80);
+    }
+</script> -->
 
 </html>
