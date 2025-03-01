@@ -142,17 +142,37 @@ document.addEventListener('deviceready', function() {
 
     // โค้ดที่ต้องการใช้ Cordova API
     document.getElementById('screenshotBtn').addEventListener('click', function() {
-        // ขอ permission สำหรับ WRITE_EXTERNAL_STORAGE
-        cordova.plugins.permissions.requestPermission(cordova.plugins.permissions.WRITE_EXTERNAL_STORAGE, function(status) {
+        // ขอ permission สำหรับ WRITE_EXTERNAL_STORAGE และ READ_EXTERNAL_STORAGE
+        var permissions = [
+            cordova.plugins.permissions.WRITE_EXTERNAL_STORAGE,
+            cordova.plugins.permissions.READ_EXTERNAL_STORAGE
+        ];
+
+        cordova.plugins.permissions.hasPermission(permissions[0], function(status) {
             if (status.hasPermission) {
-                alert("Permission OK");
-                // ถ้าได้รับ permission แล้ว, เรียกใช้ screenshot
                 captureScreenshot();
             } else {
-                alert("Permission denied to access storage.");
+                cordova.plugins.permissions.requestPermissions(permissions, function(status) {
+                    if (status.hasPermission) {
+                        alert("Permission OK");
+                        captureScreenshot(); 
+                    } else {
+                        // ถ้าไม่ได้รับ permission ลองขอแบบเดี่ยวอีกครั้ง
+                        cordova.plugins.permissions.requestPermission(permissions[0], function(status) {
+                            if(status.hasPermission) {
+                                alert("Permission OK");
+                                captureScreenshot();
+                            } else {
+                                alert("Permission denied to access storage. Please enable manually in Settings.");
+                            }
+                        }, function(error) {
+                            console.error("Permission request failed: ", error);
+                        });
+                    }
+                }, function(error) {
+                    console.error("Permission request failed: ", error);
+                });
             }
-        }, function(error) {
-            console.error("Permission request failed: ", error);
         });
     });
 
