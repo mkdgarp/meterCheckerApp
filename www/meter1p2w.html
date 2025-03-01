@@ -7,6 +7,7 @@
     <title>ตรวจสอบมิเตอร์ไฟฟ้า</title>
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <script src="js/jquery.js"></script>
+    <script src="js/canvas.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="css/global.css" />
     <style>
@@ -104,8 +105,18 @@
     <span class="info-text">สรุปผลการตรวจสอบ: <span class="error-result">รอผลการทดสอบ</span></span>
     </div>
 
-    <button class="rounded-5" onclick="calError()">คำนวณ</button>
-    <button class="rounded-5 mt-3" onclick="captureScreen()">บันทึกรูปภาพ</button>
+    <div class="row">
+        <div class="col">
+            <button class="rounded-5" onclick="calError()">คำนวณ</button>
+        </div>
+        <div class="col saveJobs">
+            <button class="rounded-5" onclick="saveJobs()">บันทึกงาน</button>
+        </div>
+    </div>
+
+    <!-- <button class="rounded-5 mt-3" onclick="captureScreen()">
+      บันทึกรูปภาพ
+    </button> -->
     <!-- <button onclick="calError()">dummy test 1p2w</button> -->
 </body>
 
@@ -221,58 +232,9 @@
         });
         document.body.appendChild(script);
     };
-
-    const clearElement = () => {
-        console.log("clear all!");
-        $(".renderTime,.renderDOM").html("");
-        $(".kwResult,.error-text,.textPreResultMeter").html("0.0000");
-        $(".error-result").html("รอผลการทดสอบ");
-    };
 </script>
 <script src="js/meter1p2w.js"></script>
-<script>
-    const calError = () => {
-        if (usage_type == '' || meter_type == '') {
-            alert('กรุณาเลือกชนิดมิเตอร์ และ ประเภทการใช้งาน ก่อนกดปุ่มคำนวณ')
-            return
-        }
-        let result = 0;
-        result = (calPrev() / calPmea() - 1) * 100;
 
-        console.log("error", result.toFixed(4));
-        $(".error-text").html(result.toFixed(4));
 
-        if (isNaN(result)) {
-            $(".error-result").html('<b class="text-danger">ไม่สามารถคำนวณได้</b>');
-        } else if (result.toFixed(4) < -2.5 || result.toFixed(4) > 2.5) {
-            $(".error-result").html('<b class="text-danger">ไม่ผ่านการทดสอบ</b>');
-        } else {
-            $(".error-result").html('<b class="text-success">ผ่านการทดสอบ</b>');
-        }
-        return result.toFixed(4);
-    };
-</script>
-
-<!-- <script>
-    // เพิ่มฟังก์ชั่นบันทึกภาพหน้าจอ
-    function captureScreen() {
-        // ตรวจสอบว่าอยู่ใน Cordova environment
-        if (!window.navigator.camera) {
-            alert("กรุณาใช้งานในแอพพลิเคชั่น");
-            return;
-        }
-
-        // ใช้ plugin screenshot เพื่อจับภาพหน้าจอ
-        navigator.screenshot.save(function(error, res) {
-            if (error) {
-                console.error(error);
-                alert("เกิดข้อผิดพลาดในการบันทึกภาพ");
-            } else {
-                console.log('Screenshot saved', res.filePath);
-                alert("บันทึกภาพสำเร็จ\nที่อยู่ไฟล์: " + res.filePath);
-            }
-        }, 'jpg', 80);
-    }
-</script> -->
 
 </html>

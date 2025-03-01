@@ -1,5 +1,6 @@
 const fixREV = `<input type="number" id="rev_impulse" placeholder="Rev,Impulse/kWh" />`
 
+var isMethod = 1;
 let Pmea = 0
 let Prev = 0
 let errorResult = 0
@@ -20,24 +21,24 @@ const calPmea = () => {
         // let i = 13.85
         // let pf = 0.84
 
-        let Pmea_A = $('.Vvalue_A').val() * $('.Avalue_A').val() * $('.PFvalue_A').val()
-        let Pmea_B = $('.Vvalue_B').val() * $('.Avalue_B').val() * $('.PFvalue_B').val()
-        let Pmea_C = $('.Vvalue_C').val() * $('.Avalue_C').val() * $('.PFvalue_C').val()
+        let Pmea_A = ($('.Vvalue_A').val() * $('.Avalue_A').val() * $('.PFvalue_A').val()) / 1000
+        let Pmea_B = ($('.Vvalue_B').val() * $('.Avalue_B').val() * $('.PFvalue_B').val()) / 1000
+        let Pmea_C = ($('.Vvalue_C').val() * $('.Avalue_C').val() * $('.PFvalue_C').val()) / 1000
 
 
         console.log('pmea', Pmea_A, Pmea_B, Pmea_C)
-        Pmea = ((Pmea_A + Pmea_B + Pmea_C) * Math.sqrt(3))
+        Pmea = ((Pmea_A + Pmea_B + Pmea_C))
         $('.kwResult_A').val(Pmea_A)
         $('.kwResult_B').val(Pmea_B)
         $('.kwResult_C').val(Pmea_C)
     } else if (usage_type == 3) {
-        let kw_A = $('.KWvalue_A').val()
-        let kw_B = $('.KWvalue_B').val()
-        let kw_C = $('.KWvalue_C').val()
-        Pmea = ((kw_A + kw_B + kw_C) * Math.sqrt(3))
+        let kw_A = Number($('.KWvalue_A').val())
+        let kw_B = Number($('.KWvalue_B').val())
+        let kw_C = Number($('.KWvalue_C').val())
+        Pmea = kw_A + kw_B + kw_C
         console.log(kw_A, kw_B, kw_C)
     }
-    console.log('Pmea', Pmea.toFixed(4));
+    // console.log('Pmea', Pmea.toFixed(4));
 
     $('.kwResult').html(Pmea.toFixed(4))
     return Pmea.toFixed(4)
@@ -55,7 +56,7 @@ const calPrev = () => {
         let a = $('#rev_impulse').val();
         let b = 3600;
         let c = $('.roundTest').val();
-        let d = milliseconds;
+        let d = milliseconds / 100;
 
         console.log('analog ', b, a, c, d)
         console.log((b / a), (c / d))
@@ -211,7 +212,8 @@ const analogAVpf = () => {
     <div>
     ${fixREV} 
     </div>
-            <b>ป้อนค่า kW จากแคมป์มิเตอร์</b>
+    <div>
+            <b>ป้อนค่า V , I , pf จากแคลมป์มิเตอร์</b>
         </div>
         <div class="d-inline-flex align-items-center w-100">
         <div class="w-25" >&nbsp;</div>
@@ -259,8 +261,10 @@ const analogKWh = () => {
     <div>
     ${fixREV} 
     </div>
-            <b>ป้อนค่า V , I , pf จากแคลมป์มิเตอร์</b>
+    <div>
+            <b>ป้อนค่า kW จากแคมป์มิเตอร์</b>
         </div>
+            
          <div class="d-inline-flex align-items-center w-100">
         <div class="w-25" >&nbsp;</div>
             <input class="ms-auto w-25 text-danger border-0 bg-white" value="Phase A" disabled/>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ตรวจสอบมิเตอร์ไฟฟ้า</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/global.css" />
+    <style>
+        body {
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        input,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        
+        .error-text>b {
+            color: red;
+            font-size: 36px;
+        }
+        
+        .info-text>b {
+            color: #000;
+            font-size: 36px;
+        }
+        
+        .timeDiv {
+            display: flex;
+            width: 100%;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .justCircle {
+            border-radius: 100%;
+            height: 100px;
+            width: 100px;
+            background: #D9D9D9;
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            margin: auto;
+            font-weight: bold;
+        }
+        
+        .textTime {
+            font-size: 35px;
+            padding-top: 25px;
+        }
+        
+        .roundTestDIV {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="text-center mx-auto justify-content-center">
+        <h1 class="isMethod"></h1>
+
+        <input class="form-control peano text-center mb-3" type="text" readonly />
+
+        <span class="error-result mb-3"></span>
+
+        <input class="form-control error w-auto text-center mx-auto mb-4" type="text" readonly />
+
+        <span>ค่าkWจากมิเตอร์</span>
+        <div class="justCircle mb-4"><span class="pmea"></span></div>
+        <span>ค่าkWจากแคลมป์มิเตอร์</span>
+        <div class="justCircle"><span class="prev"></span></div>
+    </div>
+</body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let storage = localStorage.getItem("globalResult");
+        let parseStorage = JSON.parse(storage)[0];
+        let peano = parseStorage.pea_no;
+        let isMethod = parseStorage.isMethod;
+        let prev = parseStorage.prev;
+        let pmea = parseStorage.pmea;
+        let error = Number(parseStorage.error);
+
+        // console.log(peano)
+        // console.log(parseStorage)
+
+        $(".isMethod").html(
+            isMethod == 0 ? "มิเตอร์ประเภท 1P 2W" : "มิเตอร์ประเภท 3P 4W"
+        );
+        $(".peano").val(peano);
+        $(".pmea").html(pmea + '<br>kW');
+        $(".prev").html(prev + '<br>kW');
+        $(".error").val(error + "%");
+        if (isNaN(error)) {
+            $(".error-result").html(
+                '<b style="font-size:36px;" class="text-danger">ไม่สามารถคำนวณได้กรุณาระบุค่าใหม่</b>'
+            );
+            return;
+        } else if (error.toFixed(4) < -2.5 || error.toFixed(4) > 2.5) {
+            $(".error-result").html('<b style="font-size:36px;" class="text-danger">ไม่ผ่านการทดสอบ</b>');
+        } else {
+            $(".error-result").html('<b style="font-size:36px;" class="text-success">ผ่านการทดสอบ</b>');
+        }
+    });
+</script>
+
+</html>

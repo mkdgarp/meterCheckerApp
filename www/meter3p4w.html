@@ -219,36 +219,8 @@
         });
         document.body.appendChild(script);
     };
-
-    const clearElement = () => {
-        console.log("clear all!");
-        $(".renderTime,.renderDOM").html("");
-        $(".kwResult,.error-text,.textPreResultMeter").html("0.0000");
-        $(".error-result").html("รอผลการทดสอบ");
-    };
 </script>
 <script src="js/meter3p4w.js"></script>
-<script>
-    const calError = () => {
-        if (usage_type == '' || meter_type == '') {
-            alert('กรุณาเลือกชนิดมิเตอร์ และ ประเภทการใช้งาน ก่อนกดปุ่มคำนวณ')
-            return
-        }
-        let result = 0;
-        result = (calPrev() / calPmea() - 1) * 100;
 
-        console.log("error", result.toFixed(4));
-        $(".error-text").html(result.toFixed(4));
-
-        if (isNaN(result)) {
-            $(".error-result").html('<b class="text-danger">ไม่สามารถคำนวณได้</b>');
-        } else if (result.toFixed(4) < -2.5 || result.toFixed(4) > 2.5) {
-            $(".error-result").html('<b class="text-danger">ไม่ผ่านการทดสอบ</b>');
-        } else {
-            $(".error-result").html('<b class="text-success">ผ่านการทดสอบ</b>');
-        }
-        return result.toFixed(4);
-    };
-</script>
 
 </html>

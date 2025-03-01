@@ -1,5 +1,6 @@
 const fixREV = `<input type="number" id="rev_impulse" placeholder="Rev,Impulse/kWh" />`
 
+var isMethod = 0;
 let Pmea = 0
 let Prev = 0
 let errorResult = 0
@@ -17,7 +18,7 @@ const calPmea = () => {
             // let i = 13.85
             // let pf = 0.84
 
-        Pmea = v * i * pf
+        Pmea = (v * i * pf)
             // console.log('Pmea', Pmea.toFixed(4));
             // $('.kwResult').html(Pmea.toFixed(4))
             // return Pmea.toFixed(4)
@@ -45,7 +46,7 @@ const calPrev = () => {
         let a = $('#rev_impulse').val();
         let b = 3600;
         let c = $('.roundTest').val();
-        let d = milliseconds;
+        let d = milliseconds / 100;
 
         console.log((b / a), (c / d))
 
