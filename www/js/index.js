@@ -82,8 +82,7 @@ const calError = () => {
 };
 
 const saveJobs = () => {
-    captureScreenshot(); // เรียกใช้ฟังก์ชันบันทึกหน้าจอ
-    // window.location.href = 'result.html';
+    window.location.href = 'result.html';
 };
 
 const captureScreenshot = () => {

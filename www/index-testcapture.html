@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Screenshot Methods</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="container">
+        <button onclick="captureScreenshot()">Capture Screenshot</button>
+        <div id="status"></div>
+    </div>
+
+    <script src="cordova.js"></script>
+    <!-- <script src="js/testCapture.js"></script> -->
+    <script>
+        function captureScreenshot() {
+            navigator.screenshot.save(function(error, res) {
+                if (error) {
+                    console.error(error);
+                } else {
+                    console.log('ok', res.filePath); //should be path/to/myScreenshot.jpg
+                }
+            }, 'jpg', 100, 'myScreenShot');
+        }
+
+        function saveScreenshotToGallery(filePath) {
+            window.resolveLocalFileSystemURL(filePath, function(fileEntry) {
+                window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory + 'Pictures', function(dirEntry) {
+                    fileEntry.moveTo(dirEntry, 'screenshot_' + Date.now() + '.jpg', function() {
+                        console.log('Screenshot saved to gallery');
+                    }, function(error) {
+                        console.error('Error saving screenshot to gallery: ' + error.code);
+                    });
+                }, function(error) {
+                    console.error('Error resolving gallery directory: ' + error.code);
+                });
+            }, function(error) {
+                console.error('Error resolving screenshot file: ' + error.code);
+            });
+        }
+    </script>
+</body>
+
+</html>

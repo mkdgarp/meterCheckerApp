@@ -1,199 +1,236 @@
+// วิธีที่ 1: ใช้ Promise แทน callback
+
 document.addEventListener('deviceready', function() {
-    console.log('ready')
+    console.log('ready');
 
-    document.getElementById('btn1').addEventListener('click', screenshotCordovaPlugin);
-    document.getElementById('btn2').addEventListener('click', screenshotNavigator);
-    document.getElementById('btn3').addEventListener('click', screenshotCamera);
-    document.getElementById('btn4').addEventListener('click', screenshotHtml2Canvas);
-    document.getElementById('btn5').addEventListener('click', screenshotMediaProjection);
-    document.getElementById('btn6').addEventListener('click', screenshotWebView);
-    document.getElementById('btn7').addEventListener('click', screenshotCanvasToBlob);
-    document.getElementById('btn8').addEventListener('click', screenshotFileAPI);
-    document.getElementById('btn9').addEventListener('click', screenshotScreenCaptureIntent);
-    document.getElementById('btn10').addEventListener('click', screenshotADB);
-
-    // 1. ใช้ `cordova-plugin-screenshot`
-    function screenshotCordovaPlugin() {
-        Screenshot.capture(function(error, path) {
-            if (error) console.error("Error:", error);
-            else console.log("Saved at:", path);
-        });
-    }
-
-    // 2. ใช้ `navigator.screenshot.save`
-    function screenshotNavigator() {
-        navigator.screenshot.save(function(error, res) {
-            if (error) console.error("Error:", error);
-            else console.log("Saved at:", res.filePath);
-        }, 'jpg', 100, 'Pictures');
-    }
-
-    // 3. ใช้ `cordova-plugin-camera` ในโหมด `SCREENSHOT`
-    function screenshotCamera() {
-        navigator.camera.getPicture(function(imageURI) {
-            console.log("Captured:", imageURI);
-        }, function(error) {
-            console.error("Error:", error);
-        }, {
-            quality: 100,
-            destinationType: Camera.DestinationType.FILE_URI
-        });
-    }
-
-    // 4. ใช้ `html2canvas`
-    function screenshotHtml2Canvas() {
-        html2canvas(document.body).then(canvas => {
-            canvas.toBlob(blob => {
-                console.log("Captured Blob:", blob);
-            });
-        });
-    }
-
-    // 5. ใช้ `MediaProjection API` (ผ่าน Plugin)
-    function screenshotMediaProjection() {
-        cordova.plugins.MediaProjection.screenshot(function(path) {
-            console.log("Saved at:", path);
-        }, function(error) {
-            console.error("Error:", error);
-        });
-    }
-
-    // 6. ใช้ `webview.captureScreenshot`
-    function screenshotWebView() {
-        webview.captureScreenshot(function(path) {
-            console.log("Saved at:", path);
-        }, function(error) {
-            console.error("Error:", error);
-        });
-    }
-
-    // 7. ใช้ `canvas.toBlob`
-    function screenshotCanvasToBlob() {
-        let canvas = document.createElement('canvas');
-        let ctx = canvas.getContext('2d');
-        ctx.fillStyle = 'red';
-        ctx.fillRect(10, 10, 100, 100);
-        canvas.toBlob(blob => {
-            console.log("Captured Blob:", blob);
-        });
-    }
-
-    // 8. ใช้ `File API`
-    function screenshotFileAPI() {
-        let canvas = document.createElement('canvas');
-        let ctx = canvas.getContext('2d');
-        ctx.fillStyle = 'blue';
-        ctx.fillRect(10, 10, 100, 100);
-        let dataURL = canvas.toDataURL();
-        let blob = dataURItoBlob(dataURL);
-        window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(dir) {
-            dir.getFile("screenshot.png", {
-                create: true
-            }, function(file) {
-                file.createWriter(function(writer) {
-                    writer.write(blob);
-                    console.log("Saved at:", cordova.file.dataDirectory + "screenshot.png");
-                });
-            });
-        });
-    }
-
-    // 9. ใช้ `Screen Capture Intent`
-    function screenshotScreenCaptureIntent() {
-        cordova.exec(function(result) {
-            console.log("Captured:", result);
-        }, function(error) {
-            console.error("Error:", error);
-        }, "ScreenCapture", "capture", []);
-    }
-
-    // 10. ใช้ `adb shell screencap`
-    function screenshotADB() {
-        cordova.exec(function(result) {
-            console.log("Captured:", result);
-        }, function(error) {
-            console.error("Error:", error);
-        }, "ADB", "screencap", ["/sdcard/screenshot.png"]);
-    }
-
-    // Helper function
-    function dataURItoBlob(dataURI) {
-        let byteString = atob(dataURI.split(',')[1]);
-        let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-        let arrayBuffer = new ArrayBuffer(byteString.length);
-        let ia = new Uint8Array(arrayBuffer);
-        for (let i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
+    document.getElementById('screenshotBtn_1').addEventListener('click', async function() {
+        try {
+            await requestPermission();
+            captureScreenshot();
+        } catch (error) {
+            alert(error.message);
         }
-        return new Blob([arrayBuffer], {
-            type: mimeString
+    });
+
+    function requestPermission() {
+        return new Promise((resolve, reject) => {
+            var permissions = cordova.plugins.permissions;
+            permissions.hasPermission(permissions.WRITE_EXTERNAL_STORAGE, function(status) {
+                if (status.hasPermission) {
+                    resolve();
+                } else {
+                    permissions.requestPermissions([permissions.WRITE_EXTERNAL_STORAGE, permissions.READ_EXTERNAL_STORAGE], function(status) {
+                        status.hasPermission ? resolve() : reject(new Error("Permission denied"));
+                    }, reject);
+                }
+            });
         });
     }
 
-    function xx() {
-        navigator.screenshot.save(function(error, res) {
-            if (error) {
-                console.error(error);
-            } else {
-                console.log('ok', res.filePath);
-            }
+    function captureScreenshot() {
+        Screenshot.capture(result => alert("Screenshot captured: " + result), error => alert("Error: " + error));
+    }
+});
+
+// วิธีที่ 2: ใช้ async/await แทน callback
+
+document.addEventListener('deviceready', function() {
+    console.log('ready');
+
+    document.getElementById('screenshotBtn_2').addEventListener('click', async function() {
+        try {
+            let permissionGranted = await checkPermission();
+            if (!permissionGranted) await requestPermission();
+            captureScreenshot();
+        } catch (error) {
+            alert(error.message);
+        }
+    });
+
+    async function checkPermission() {
+        return new Promise(resolve => {
+            cordova.plugins.permissions.hasPermission(cordova.plugins.permissions.WRITE_EXTERNAL_STORAGE, function(status) {
+                resolve(status.hasPermission);
+            });
         });
     }
 
-    // โค้ดที่ต้องการใช้ Cordova API
-    document.getElementById('screenshotBtn').addEventListener('click', function() {
-        // ขอ permission สำหรับ WRITE_EXTERNAL_STORAGE และ READ_EXTERNAL_STORAGE
-        var permissions = [
-            cordova.plugins.permissions.WRITE_EXTERNAL_STORAGE,
-            cordova.plugins.permissions.READ_EXTERNAL_STORAGE
-        ];
+    async function requestPermission() {
+        return new Promise((resolve, reject) => {
+            cordova.plugins.permissions.requestPermissions([cordova.plugins.permissions.WRITE_EXTERNAL_STORAGE, cordova.plugins.permissions.READ_EXTERNAL_STORAGE], function(status) {
+                status.hasPermission ? resolve() : reject(new Error("Permission denied"));
+            }, reject);
+        });
+    }
 
-        cordova.plugins.permissions.hasPermission(permissions[0], function(status) {
+    function captureScreenshot() {
+        Screenshot.capture(result => alert("Screenshot captured: " + result), error => alert("Error: " + error));
+    }
+});
+
+// วิธีที่ 3: ใช้ Event Delegation
+
+document.addEventListener('deviceready', function() {
+    console.log('ready');
+
+    document.body.addEventListener('click', function(event) {
+        if (event.target.id === 'screenshotBtn_3') {
+            checkAndCapture();
+        }
+    });
+
+    function checkAndCapture() {
+        cordova.plugins.permissions.hasPermission(cordova.plugins.permissions.WRITE_EXTERNAL_STORAGE, function(status) {
             if (status.hasPermission) {
                 captureScreenshot();
             } else {
-                cordova.plugins.permissions.requestPermissions(permissions, function(status) {
+                cordova.plugins.permissions.requestPermissions([cordova.plugins.permissions.WRITE_EXTERNAL_STORAGE, cordova.plugins.permissions.READ_EXTERNAL_STORAGE], function(status) {
                     if (status.hasPermission) {
-                        alert("Permission OK");
-                        captureScreenshot(); 
+                        captureScreenshot();
                     } else {
-                        // ถ้าไม่ได้รับ permission ลองขอแบบเดี่ยวอีกครั้ง
-                        cordova.plugins.permissions.requestPermission(permissions[0], function(status) {
-                            if(status.hasPermission) {
-                                alert("Permission OK");
-                                captureScreenshot();
-                            } else {
-                                alert("Permission denied to access storage. Please enable manually in Settings.");
-                            }
-                        }, function(error) {
-                            console.error("Permission request failed: ", error);
-                        });
+                        alert("Permission denied");
                     }
-                }, function(error) {
-                    console.error("Permission request failed: ", error);
                 });
             }
         });
-    });
+    }
 
     function captureScreenshot() {
-        // เรียกใช้คำสั่ง capture ของ plugin screenshot
-        Screenshot.capture(function(result) {
-            console.log("Screenshot captured successfully:", result);
-            alert("Screenshot captured successfully");
-            // result จะเป็น path ของไฟล์ที่บันทึก
-            saveScreenshot(result);
-        }, function(error) {
-            console.error("Error capturing screenshot: ", error);
-            alert("Error capturing screenshot");
+        Screenshot.capture(result => alert("Screenshot captured: " + result), error => alert("Error: " + error));
+    }
+});
+
+// วิธีที่ 4: ใช้ IIFE (Immediately Invoked Function Expression)
+
+document.addEventListener('deviceready', function() {
+    console.log('ready');
+
+    (function setupButton() {
+        document.getElementById('screenshotBtn_4').addEventListener('click', function() {
+            cordova.plugins.permissions.hasPermission(cordova.plugins.permissions.WRITE_EXTERNAL_STORAGE, function(status) {
+                if (status.hasPermission) {
+                    captureScreenshot();
+                } else {
+                    cordova.plugins.permissions.requestPermissions([cordova.plugins.permissions.WRITE_EXTERNAL_STORAGE, cordova.plugins.permissions.READ_EXTERNAL_STORAGE], function(status) {
+                        status.hasPermission ? captureScreenshot() : alert("Permission denied");
+                    });
+                }
+            });
+        });
+    })();
+
+    function captureScreenshot() {
+        Screenshot.capture(result => alert("Screenshot captured: " + result), error => alert("Error: " + error));
+    }
+});
+
+// วิธีที่ 5: ใช้ ES6 Class
+
+class ScreenshotHandler {
+    constructor(buttonId) {
+        this.button = document.getElementById(buttonId);
+        if (this.button) {
+            this.button.addEventListener('click', () => this.handleClick());
+        }
+    }
+
+    handleClick() {
+        cordova.plugins.permissions.hasPermission(cordova.plugins.permissions.WRITE_EXTERNAL_STORAGE, status => {
+            if (status.hasPermission) {
+                this.captureScreenshot();
+            } else {
+                cordova.plugins.permissions.requestPermissions([cordova.plugins.permissions.WRITE_EXTERNAL_STORAGE, cordova.plugins.permissions.READ_EXTERNAL_STORAGE], status => {
+                    status.hasPermission ? this.captureScreenshot() : alert("Permission denied");
+                });
+            }
         });
     }
 
-    function saveScreenshot(path) {
-        // บันทึกภาพลงใน storage หรือที่ที่ต้องการ
-        console.log("Saving screenshot to:", path);
-        // คุณสามารถทำการเก็บไฟล์ในที่เก็บข้อมูลต่างๆ ตามต้องการได้
+    captureScreenshot() {
+        Screenshot.capture(result => alert("Screenshot captured: " + result), error => alert("Error: " + error));
+    }
+}
+
+document.addEventListener('deviceready', function() {
+    console.log('ready');
+    new ScreenshotHandler('screenshotBtn_5');
+});
+
+document.addEventListener('deviceready', function() {
+    console.log('Device is ready');
+
+    document.getElementById('screenshotBtn').addEventListener('click', function() {
+        checkPermissions()
+            .then(captureScreenshot)
+            .then(saveToGallery)
+            .catch(error => {
+                alert("Error: " + error.message);
+                if (error.message.includes("Permission denied")) {
+                    promptUserToEnablePermission();
+                }
+            });
+    });
+
+    async function checkPermissions() {
+        return new Promise((resolve, reject) => {
+            var permissions = cordova.plugins.permissions;
+            var perms = [
+                permissions.WRITE_EXTERNAL_STORAGE,
+                permissions.READ_EXTERNAL_STORAGE
+            ];
+            permissions.hasPermission(perms[0], function(status) {
+                if (status.hasPermission) {
+                    resolve();
+                } else {
+                    permissions.requestPermissions(perms, function(status) {
+                        if (status.hasPermission) {
+                            resolve();
+                        } else {
+                            reject(new Error("Permission denied"));
+                        }
+                    }, reject);
+                }
+            });
+        });
     }
 
+    function captureScreenshot() {
+        return new Promise((resolve, reject) => {
+            Screenshot.capture(uri => {
+                console.log("Screenshot captured: " + uri);
+                resolve(uri);
+            }, error => reject(new Error("Failed to capture screenshot")));
+        });
+    }
 
+    function saveToGallery(filePath) {
+        return new Promise((resolve, reject) => {
+            window.resolveLocalFileSystemURL(filePath, function(fileEntry) {
+                window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, function(dirEntry) {
+                    dirEntry.getDirectory("DCIM/Screenshots", { create: true }, function(targetDir) {
+                        fileEntry.moveTo(targetDir, "screenshot_" + Date.now() + ".png", function(newFile) {
+                            console.log("Saved to: " + newFile.nativeURL);
+                            alert("Screenshot saved to Gallery!");
+                            resolve(newFile.nativeURL);
+                        }, reject);
+                    }, reject);
+                }, reject);
+            }, reject);
+        });
+    }
+
+    function promptUserToEnablePermission() {
+        alert("กรุณาเปิดสิทธิ์จัดการไฟล์ที่ Settings > Apps > Your App > Permissions");
+        cordova.plugins.permissions.requestPermission(
+            cordova.plugins.permissions.MANAGE_EXTERNAL_STORAGE,
+            function(status) {
+                if (!status.hasPermission) {
+                    alert("คุณต้องเปิดสิทธิ์ MANAGE_EXTERNAL_STORAGE เพื่อให้แอปบันทึกภาพลงแกลลอรี่");
+                }
+            },
+            function(error) {
+                console.error("Failed to request MANAGE_EXTERNAL_STORAGE: ", error);
+            }
+        );
+    }
 });

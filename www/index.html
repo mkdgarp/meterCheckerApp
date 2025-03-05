@@ -1,33 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Screenshot Methods</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ตรวจสอบมิเตอร์ไฟฟ้า</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/global.css" />
+    <style>
+        body {
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #9e64fc;
+        }
+        
+        input,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        
+        .error-text {
+            color: red;
+            font-size: 14px;
+        }
+        
+        .info-text {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .bg {
+            background-image: url(img/bg.png);
+            width: 100%;
+            height: -webkit-fill-available;
+            position: absolute;
+            z-index: -1;
+            background-repeat: no-repeat;
+            background-position: center;
+            left: 0;
+            mix-blend-mode: multiply;
+            opacity: 0.7;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>Test Screenshot on Android</h1>
-        <button id="btn1">Screenshot - Plugin Screenshot</button><br>---------------------
-        <button id="btn2">Screenshot - navigator.screenshot.save</button><br>---------------------
-        <button id="btn3">Screenshot - Camera Plugin</button><br>---------------------
-        <button id="btn4">Screenshot - html2canvas</button><br>---------------------
-        <button id="btn5">Screenshot - MediaProjection</button><br>---------------------
-        <button id="btn6">Screenshot - WebView</button><br>---------------------
-        <button id="btn7">Screenshot - canvas.toBlob</button><br>---------------------
-        <button id="btn8">Screenshot - File API</button><br>---------------------
-        <button id="btn9">Screenshot - Screen Capture Intent</button><br>---------------------
-        <button id="btn10">Screenshot - ADB Shell</button><br>---------------------
-        <button onclick="xx()">plugin</button><br>---------------------
-        <button id="screenshotBtn">plugin real</button><br>---------------------
-        <div id="status"></div>
-    </div>
+    <h1 style="text-align: center;
+    margin-bottom: 30px;
+    font-size: 26px;
+    font-weight: 400;
+    color: white;">
+        โปรแกรมช่วยตรวจสอบมิเตอร์
+    </h1>
 
-    <script src="cordova.js"></script>
-    <script src="js/testCapture.js"></script>
+    <div class="container">
+        <button onclick="location.href='meter1p2w.html'" class="rounded-5" style="margin-bottom: 20px">
+        มิเตอร์ประเภท 1 P 2 W
+      </button>
+
+        <button onclick="location.href='meter3p4w.html'" class="rounded-5">
+        มิเตอร์ประเภท 3 P 4 W
+      </button>
+    </div>
+    <div class="bg"></div>
 </body>
+
+<script src="js/index.js"></script>
 
 </html>
