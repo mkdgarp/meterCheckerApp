@@ -9,6 +9,8 @@
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="css/global.css" />
+    <script src="js/canvas.js">
+    </script>
     <style>
         body {
             padding: 20px;
@@ -146,32 +148,66 @@
 
         const filename = `${year}-${month}-${day}-${hours}-${minutes}-${seconds}_PEANO-${$(".peano").val()}`;
 
-        navigator.screenshot.save(
-            function(error, res) {
-                if (error) {
-                    console.error(error);
-                    // แสดงการแจ้งเตือนข้อผิดพลาด (ถ้าจำเป็น)
-                    if (window.plugins && window.plugins.toast) {
-                        window.plugins.toast.showShortCenter(
-                            "เกิดข้อผิดพลาดในการบันทึกภาพหน้าจอ"
-                        );
-                    } else {
-                        alert("เกิดข้อผิดพลาดในการบันทึกภาพหน้าจอ");
-                    }
-                } else {
-                    console.log("ok", res.filePath);
-                    // แสดงการแจ้งเตือนสำเร็จ
-                    if (window.plugins && window.plugins.toast) {
-                        window.plugins.toast.showShortCenter("บันทึกภาพหน้าจอสำเร็จ");
-                    } else {
-                        alert("บันทึกภาพหน้าจอสำเร็จ");
-                    }
-                }
-            },
-            "jpg",
-            100,
-            filename
-        );
+        // Using the HTML5 canvas to capture a screenshot instead of navigator.screenshot
+        html2canvas(document.body).then(canvas => {
+            const imgData = canvas.toDataURL("image/jpeg", 1.0);
+            const link = document.createElement('a');
+            link.href = imgData;
+            link.download = filename + ".jpg";
+
+            // Save image to Android gallery
+            const blob = dataURLtoBlob(imgData);
+            const filePath = `${cordova.file.externalRootDirectory}Pictures/${filename}.jpg`;
+            window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, function(dirEntry) {
+                dirEntry.getFile(`Pictures/${filename}.jpg`, {
+                    create: true,
+                    exclusive: false
+                }, function(fileEntry) {
+                    fileEntry.createWriter(function(fileWriter) {
+                        fileWriter.write(blob);
+                        // Show success notification
+                        if (window.plugins && window.plugins.toast) {
+                            window.plugins.toast.showShortCenter("บันทึกภาพหน้าจอสำเร็จใน Gallery");
+                        } else {
+                            alert("บันทึกภาพหน้าจอสำเร็จใน Gallery");
+                        }
+                    }, errorHandler);
+                }, errorHandler);
+            }, errorHandler);
+
+            // เพิ่ม console.log เพื่อดูข้อมูล
+            console.log("Image filename:", filename + ".jpg");
+            console.log("Image data URL:", imgData);
+            console.log("Download path:", link.href);
+            console.log("file path:", filePath);
+
+            link.click();
+        }).catch(error => {
+            console.error(error);
+            // Show error notification
+            if (window.plugins && window.plugins.toast) {
+                window.plugins.toast.showShortCenter("เกิดข้อผิดพลาดในการบันทึกภาพหน้าจอ");
+            } else {
+                alert("เกิดข้อผิดพลาดในการบันทึกภาพหน้าจอ");
+            }
+        });
+
+        function dataURLtoBlob(dataURL) {
+            const byteString = atob(dataURL.split(',')[1]);
+            const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], {
+                type: mimeString
+            });
+        }
+
+        function errorHandler(error) {
+            console.error("Error: ", error);
+        }
     };
 
     const backtab = () => {
